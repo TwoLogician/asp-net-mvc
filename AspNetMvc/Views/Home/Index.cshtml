@@ -1,0 +1,45 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Index</title>
+</head>
+<body>
+    <div>
+        <input id="fileInput" type="file" />
+        <button id="saveButton">save</button>
+    </div>
+    <script>
+        let files = []
+        let fileInput = document.getElementById("fileInput")
+        fileInput.onchange = (e) => {
+            files = e.target.files
+        }
+        let saveButton = document.getElementById("saveButton")
+        saveButton.onclick = async (e) => {
+            try {
+                let formData = new FormData()
+                formData.append("json", JSON.stringify({ id: 2, name: "Two" }))
+                Array.from(files).forEach(x => {
+                    formData.append("file", x)
+                })
+                let rs = await fetch("/api/file", {
+                    body: formData,
+                    method: "POST",
+                })
+                let data = await rs.json()
+                console.log(data)
+            } catch (err) {
+                alert(err.message)
+                console.error(err)
+            }
+        }
+    </script>
+</body>
+</html>
